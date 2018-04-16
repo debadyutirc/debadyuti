@@ -1,42 +1,67 @@
-<style scoped>
-
-
-
-</style>
-
 <template>
-
-<div>
-    <h1>Register</h1>
-    <input type="email" name="email" v-model="email" placeholder="email" />
-    <br>
-    <input type="password" name="password" v-model="password" placeholder="password" />
-    <br>
-    <button @click="register">Register</button>
-</div>
-
+  <v-content>
+    <v-container fluid fill-height>
+      <v-layout align-center justify-center>
+        <v-flex xs12 sm8 md4>
+          <v-card class="white elevation-12">
+            <v-toolbar flat dense class="cyan">
+              <v-toolbar-title>Register</v-toolbar-title>
+            </v-toolbar>
+            <v-card-text>
+              <v-form v-model="valid">
+                <v-text-field
+                label="email"
+                v-model="email"
+                type="text"
+                required
+                ></v-text-field>
+                <v-text-field
+                label="Password"
+                v-model="password"
+                type="password"
+                required
+                ></v-text-field>
+              </v-form>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn class="cyan" @click="register">Register</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-content>
 </template>
 
 <script>
 
 import AuthenticationService from '@/services/AuthenticationService'
 export default {
-    name: 'Register',
-    data() {
-        return {
-            email: '',
-            password: ''
-        }
-    },
-    methods: {
-        async register() {
-            const response = await AuthenticationService.register({
-                email: this.email,
-                password: this.password
-            })
-            console.log(response.data)
-        }
+  name: 'Register',
+  data () {
+    return {
+      email: '',
+      password: '',
+      error: null
     }
+  },
+  methods: {
+    async register () {
+      try {
+        await AuthenticationService.register({
+          email: this.email,
+          password: this.password
+        })
+      } catch (error) {
+        this.error = error.response.data.error
+      }
+    }
+  }
 }
 
 </script>
+<style scoped>
+.error {
+  color: red;
+}
+</style>
